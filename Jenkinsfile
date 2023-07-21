@@ -3,26 +3,19 @@ pipeline {
 
     stages {
         stage('Pull and Run Docker Image') {
-            steps {
-                script {
-                    // Define the Docker image and tag you want to use
-                    def dockerImage = "gowtham47/myimage:latest"
+    steps {
+        // Pull the latest Docker image
+        bat "docker pull gowtham47/myimage:latest"
 
-                    // Pull the Docker image using the 'docker' command
-                    bat "docker pull ${dockerImage}"
+        // Stop and remove the previous container (if exists)
+        bat "docker stop my-container || true"
+        bat "docker rm my-container || true"
 
-                    // Stop and remove the existing container if it exists
-                    bat 'docker stop my-container || true'
-                    bat 'docker rm my-container || true'
+        // Run the Docker container in the background using 'start /B'
+        bat "start /B docker run --name my-container -d -p 80:8080 gowtham47/myimage:latest"
+    }
+}
 
-                    // Run the Docker image to create a container in the background
-                    def ports = "80:8080"
-
-                    bat "start /B docker run --name my-container -d -p ${ports} ${dockerImage}"
-                    
-                }
-            }
-        }
 
         stage('Deploy to Kubernetes') {
             steps {
