@@ -5,9 +5,7 @@ pipeline {
         stage('Checkout SCM') {
             steps {
                 // Checkout the Jenkinsfile from the Git repository
-                checkout([$class: 'GitSCM', 
-                          branches: [[name: '*/master']],
-                          userRemoteConfigs: [[url: 'https://github.com/Gowtham-Attili/sim.git']]])
+               git 'https://github.com/Gowtham-Attili/sim.git'
             }
         }
 
