@@ -26,16 +26,22 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Define the Kubernetes namespace and deployment name
-                    def namespace = 'your-kubernetes-namespace'
-                    def deploymentName = 'deployment'
+    // Define the Kubernetes namespace and deployment name
+    def namespace = 'your-kubernetes-namespace'
+    def deploymentName = 'deployment'
 
-                    // Authenticate to the Kubernetes cluster using kubeconfig credentials
-                    def kubeconfig = credentials('KUBECONFIG_CREDENTIALS_ID')
+    // Authenticate to the Kubernetes cluster using kubeconfig credentials
+    def kubeconfig = credentials('KUBECONFIG_CREDENTIALS_ID')
 
-                    // Apply the Kubernetes deployment YAML to deploy the image
-                    sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} apply -f deployment.yml"
-                }
+    // Print the contents of the workspace for debugging purposes
+    sh "ls -la ${WORKSPACE}"
+
+    // Print the kubeconfig to ensure it's correctly loaded (optional, for debugging)
+    sh "cat ${kubeconfig}"
+
+    // Apply the Kubernetes deployment YAML to deploy the image
+    sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} apply -f deployment.yml"
+}
 
                 // Add deployment to Kubernetes as needed
                 // This stage is skipped in this example, but you can include your deployment YAML and kubectl commands here.
