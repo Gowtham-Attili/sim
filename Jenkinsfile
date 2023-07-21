@@ -2,20 +2,28 @@ pipeline {
     agent any
 
     stages {
+        stage('Checkout SCM') {
+            steps {
+                // Checkout the Jenkinsfile from the Git repository
+                checkout([$class: 'GitSCM', 
+                          branches: [[name: '*/master']],
+                          userRemoteConfigs: [[url: 'https://github.com/Gowtham-Attili/sim.git']]])
+            }
+        }
+
         stage('Pull and Run Docker Image') {
-    steps {
-        // Pull the latest Docker image
-        bat "docker pull gowtham47/myimage:latest"
+            steps {
+                // Pull the latest Docker image
+                bat 'docker pull gowtham47/myimage:latest'
 
-        // Stop and remove the previous container (if exists)
-        bat "docker stop my-container || true"
-        bat "docker rm my-container || true"
+                // Stop and remove any existing container
+                bat 'docker stop my-container || true'
+                bat 'docker rm my-container || true'
 
-        // Run the Docker container in the background using 'start /B'
-        bat "start /B docker run --name my-container -d -p 80:8080 gowtham47/myimage:latest"
-    }
-}
-
+                // Run a new container from the latest image
+                bat 'docker run --name my-container -d -p 80:8080 gowtham47/myimage:latest'
+            }
+        }
 
         stage('Deploy to Kubernetes') {
             steps {
@@ -42,8 +50,7 @@ pipeline {
                 // This stage is skipped in this example, but you can include your deployment YAML and kubectl commands here.
             }
         }
-
-        // Add more stages as needed for your Jenkins pipeline
-        // e.g., Build, Test, etc.
     }
+
+    
 }
