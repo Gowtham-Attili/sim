@@ -9,12 +9,10 @@ pipeline {
                     def dockerImage = "gowtham47/myimage:latest"
 
                     // Pull the Docker image using the 'docker' command
-                    docker.image(dockerImage).pull()
+                    bat "docker pull ${dockerImage}"
 
-                    // You can also log the image details if needed
-                    docker.image(dockerImage).withRun {
-                        echo "Docker image pulled successfully: ${dockerImage}"
-                    }
+                    // Log the image details
+                    bat "docker images ${dockerImage}"
                 }
             }
         }
