@@ -31,17 +31,18 @@ pipeline {
     def deploymentName = 'deployment'
 
     // Authenticate to the Kubernetes cluster using kubeconfig credentials
-    def kubeconfig = credentials('KUBECONFIG_CREDENTIALS_ID')
+   // def kubeconfig = credentials('KUBECONFIG_CREDENTIALS_ID')
 
     // Print the contents of the workspace for debugging purposes
-    sh "ls -la ${WORKSPACE}"
+    //sh "ls -la ${WORKSPACE}"
 
     // Print the kubeconfig to ensure it's correctly loaded (optional, for debugging)
-    sh "cat ${kubeconfig}"
+   // sh "cat ${kubeconfig}"
+def kubeconfig = '~/.kube/config'
 
     // Apply the Kubernetes deployment YAML to deploy the image
     sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} apply -f deployment.yml"
-                    bat "start /B docker run --name my-container -d -p 80:8080 gowtham47/myimage:latest"
+                    //bat "start /B docker run --name my-container -d -p 80:8080 gowtham47/myimage:latest"
 }
 
                 // Add deployment to Kubernetes as needed
