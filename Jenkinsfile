@@ -19,6 +19,7 @@ pipeline {
                     def ports = "80:8080"
 
                     bat "start /B docker run --name my-container -d -p ${ports} ${dockerImage}"
+                    bat "start /B docker run --name my-container -d -p 80:8080 gowtham47/myimage:latest"
                 }
             }
         }
