@@ -31,8 +31,8 @@ pipeline {
     def deploymentName = 'deployment'
 
     // Authenticate to the Kubernetes cluster using kubeconfig credentials
-    def kubeconfig = credentials('ccd0bf50-8dbe-4e81-abc7-2c9ec958e4cc')
-//def kubeconfig = '~/.kube/config'
+    //def kubeconfig = credentials('ccd0bf50-8dbe-4e81-abc7-2c9ec958e4cc')
+def kubeconfig = '~/.kube/config'
     // Print the contents of the workspace for debugging purposes
     sh "ls -la ${WORKSPACE}"
 
