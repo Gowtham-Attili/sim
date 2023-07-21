@@ -11,12 +11,14 @@ pipeline {
                     // Pull the Docker image using the 'docker' command
                     bat "docker pull ${dockerImage}"
 
-                    // Run the Docker image to create a container
-                    def containerName = "my-container"
-                    def ports = "80:8080"
-                    //def volume = "C:/path/to/host/directory:/container/directory"
+                    // Stop and remove the existing container if it exists
+                    bat 'docker stop my-container || true'
+                    bat 'docker rm my-container || true'
 
-                    bat "docker run -d --name ${containerName} -p ${ports} ${dockerImage}"
+                    // Run the Docker image to create a container in the background
+                    def ports = "80:8080"
+
+                    bat "start /B docker run --name my-container -d -p ${ports} ${dockerImage}"
                 }
             }
         }
@@ -34,6 +36,9 @@ pipeline {
                     // Apply the Kubernetes deployment YAML to deploy the image
                     sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} apply -f deployment.yml"
                 }
+
+                // Add deployment to Kubernetes as needed
+                // This stage is skipped in this example, but you can include your deployment YAML and kubectl commands here.
             }
         }
 
