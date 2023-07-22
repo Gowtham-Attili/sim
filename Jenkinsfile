@@ -45,6 +45,7 @@ pipeline {
                 bat "kubectl --kubeconfig=\"%KUBECONFIG%\" --namespace=${namespace} get pods"
             }
             }
+            }
         }
     }
 }
