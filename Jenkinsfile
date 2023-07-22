@@ -26,24 +26,26 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-    // Define the Kubernetes namespace and deployment name
-    def namespace = 'your-kubernetes-namespace'
-    def deploymentName = 'deployment'
+                    // Define the Kubernetes namespace and deployment name
+                    def namespace = 'your-kubernetes-namespace'
+                    def deploymentName = 'deployment'
 
-    // Authenticate to the Kubernetes cluster using kubeconfig credentials
-    //def kubeconfig = credentials('ccd0bf50-8dbe-4e81-abc7-2c9ec958e4cc')
-def kubeconfig = '~/.kube/config'
-    // Print the contents of the workspace for debugging purposes
-    sh "ls -la ${WORKSPACE}"
+                    // Authenticate to the Kubernetes cluster using kubeconfig credentials
+                    def kubeconfig = credentials('KUBECONFIG_CREDENTIALS_ID')
 
-    // Print the kubeconfig to ensure it's correctly loaded (optional, for debugging)
-    sh "cat ${kubeconfig}"
+                    // Print the contents of the workspace for debugging purposes
+                    sh "ls -la ${WORKSPACE}"
 
+                    // Print the kubeconfig to ensure it's correctly loaded (optional, for debugging)
+                    sh "cat ${kubeconfig}"
 
-    // Apply the Kubernetes deployment YAML to deploy the image
-    sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} apply -f deployment.yml"
-                    bat "start /B docker run --name my-container -d -p 80:8080 gowtham47/myimage:latest"
-}
+                    // Apply the Kubernetes deployment YAML to deploy the image
+                    sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} apply -f deployment.yml"
+                    
+                    // (Optional) Verify the deployment status
+                    sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} get deployments"
+                    sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} get pods"
+                }
 
                 // Add deployment to Kubernetes as needed
                 // This stage is skipped in this example, but you can include your deployment YAML and kubectl commands here.
