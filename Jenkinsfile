@@ -30,7 +30,7 @@ pipeline {
             def namespace = 'your-kubernetes-namespace'
 
             // Authenticate to the Kubernetes cluster using kubeconfig credentials
-            withCredentials([file(credentialsId: 'KUBECONFIG_CREDENTIALS_ID', variable: 'KUBECONFIG')]) {
+            withCredentials([file(credentialsId: 'ccd0bf50-8dbe-4e81-abc7-2c9ec958e4cc', variable: 'KUBECONFIG')]) {
                 // Print the contents of the workspace for debugging purposes
                 bat "dir ${WORKSPACE}"
 
