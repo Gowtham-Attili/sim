@@ -5,7 +5,7 @@ pipeline {
         stage('Checkout SCM') {
             steps {
                 // Checkout the Jenkinsfile from the Git repository
-               git 'https://github.com/Gowtham-Attili/sim.git'
+                git 'https://github.com/Gowtham-Attili/sim.git'
             }
         }
 
@@ -14,12 +14,12 @@ pipeline {
                 // Pull the latest Docker image
                 bat 'docker pull gowtham47/myimage:latest'
 
-                // Stop and remove any existing container
+                // Stop and remove any existing container (using 'docker stop' and 'docker rm')
                 bat 'docker stop my-container || true'
                 bat 'docker rm my-container || true'
 
-                // Run a new container from the latest image
-                bat 'docker run --name my-container -d -p 80:8080 gowtham47/myimage:latest'
+                // Run a new container from the latest image (using 'docker run' with 'start')
+                bat 'start /B docker run --name my-container -d -p 80:8080 gowtham47/myimage:latest'
             }
         }
 
@@ -28,30 +28,24 @@ pipeline {
                 script {
                     // Define the Kubernetes namespace and deployment name
                     def namespace = 'your-kubernetes-namespace'
-                    def deploymentName = 'deployment'
 
                     // Authenticate to the Kubernetes cluster using kubeconfig credentials
                     def kubeconfig = credentials('KUBECONFIG_CREDENTIALS_ID')
 
                     // Print the contents of the workspace for debugging purposes
-                    sh "ls -la ${WORKSPACE}"
+                    bat "dir ${WORKSPACE}"
 
                     // Print the kubeconfig to ensure it's correctly loaded (optional, for debugging)
-                    sh "cat ${kubeconfig}"
+                    bat "type ${kubeconfig}"
 
                     // Apply the Kubernetes deployment YAML to deploy the image
-                    sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} apply -f deployment.yml"
+                    bat "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} apply -f deployment.yml"
                     
                     // (Optional) Verify the deployment status
-                    sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} get deployments"
-                    sh "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} get pods"
+                    bat "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} get deployments"
+                    bat "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} get pods"
                 }
-
-                // Add deployment to Kubernetes as needed
-                // This stage is skipped in this example, but you can include your deployment YAML and kubectl commands here.
             }
         }
     }
-
-    
 }
