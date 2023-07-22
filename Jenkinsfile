@@ -26,25 +26,24 @@ pipeline {
         stage('Deploy to Kubernetes') {
             steps {
                 script {
-                    // Define the Kubernetes namespace and deployment name
-                    def namespace = 'your-kubernetes-namespace'
+            // Define the Kubernetes namespace and deployment name
+            def namespace = 'your-kubernetes-namespace'
 
-                    // Authenticate to the Kubernetes cluster using kubeconfig credentials
-                    def kubeconfig = credentials('ccd0bf50-8dbe-4e81-abc7-2c9ec958e4cc')
+            // Authenticate to the Kubernetes cluster using kubeconfig credentials
+            withCredentials([file(credentialsId: 'KUBECONFIG_CREDENTIALS_ID', variable: 'KUBECONFIG')]) {
+                // Print the contents of the workspace for debugging purposes
+                bat "dir ${WORKSPACE}"
 
-                    // Print the contents of the workspace for debugging purposes
-                    bat "dir ${WORKSPACE}"
+                // Print the kubeconfig to ensure it's correctly loaded (using 'type' command)
+                bat "type \"%KUBECONFIG%\""
 
-                    // Print the kubeconfig to ensure it's correctly loaded (using 'type' command)
-                    bat "type \"${kubeconfig}\""
+                // Apply the Kubernetes deployment YAML to deploy the image
+                bat "kubectl --kubeconfig=\"%KUBECONFIG%\" --namespace=${namespace} apply -f deployment.yml"
 
-                    // Apply the Kubernetes deployment YAML to deploy the image
-                    bat "kubectl --kubeconfig=\"${kubeconfig}\" --namespace=${namespace} apply -f deployment.yml"
-                    
-                    // (Optional) Verify the deployment status
-                    bat "kubectl --kubeconfig=\"${kubeconfig}\" --namespace=${namespace} get deployments"
-                    bat "kubectl --kubeconfig=\"${kubeconfig}\" --namespace=${namespace} get pods"
-                }
+                // (Optional) Verify the deployment status
+                bat "kubectl --kubeconfig=\"%KUBECONFIG%\" --namespace=${namespace} get deployments"
+                bat "kubectl --kubeconfig=\"%KUBECONFIG%\" --namespace=${namespace} get pods"
+            }
             }
         }
     }
