@@ -35,15 +35,15 @@ pipeline {
                     // Print the contents of the workspace for debugging purposes
                     bat "dir ${WORKSPACE}"
 
-                    // Print the kubeconfig to ensure it's correctly loaded (optional, for debugging)
-                    bat "type ${kubeconfig}"
+                    // Print the kubeconfig to ensure it's correctly loaded (using 'type' command)
+                    bat "type \"${kubeconfig}\""
 
                     // Apply the Kubernetes deployment YAML to deploy the image
-                    bat "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} apply -f deployment.yml"
+                    bat "kubectl --kubeconfig=\"${kubeconfig}\" --namespace=${namespace} apply -f deployment.yml"
                     
                     // (Optional) Verify the deployment status
-                    bat "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} get deployments"
-                    bat "kubectl --kubeconfig=${kubeconfig} --namespace=${namespace} get pods"
+                    bat "kubectl --kubeconfig=\"${kubeconfig}\" --namespace=${namespace} get deployments"
+                    bat "kubectl --kubeconfig=\"${kubeconfig}\" --namespace=${namespace} get pods"
                 }
             }
         }
